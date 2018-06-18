@@ -1,24 +1,25 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Deployed on heroku as 
 
-Things you may want to cover:
+https://whispering-mesa-93684.herokuapp.com
 
-* Ruby version
+## Local dev
 
-* System dependencies
+  $ bundle install --without production
 
-* Configuration
+  $ rails db:migrate
 
-* Database creation
+  $ rails server
 
-* Database initialization
+## Deploy
 
-* How to run the test suite
+  $ heroku login
 
-* Services (job queues, cache servers, search engines, etc.)
+  $ git push heroku master
 
-* Deployment instructions
+  $ heroku run rails db:migrate
 
-* ...
+
+
+
