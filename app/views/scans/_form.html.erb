@@ -1,0 +1,27 @@
+<%= form_with(model: scan, local: true) do |form| %>
+  <% if scan.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(scan.errors.count, "error") %> prohibited this scan from being saved:</h2>
+
+      <ul>
+      <% scan.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :subject %>
+    <%= form.text_area :subject, id: :scan_subject %>
+  </div>
+
+  <div class="field">
+    <%= form.label :session %>
+    <%= form.text_area :session, id: :scan_session %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
