@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.5.1'
 
+gem 'bundler', '~> 1.16.0'
 gem 'rails', '~> 5.2.0'
 gem 'puma', '~> 3.11.0'
 gem 'sass-rails', '~> 5.0.0'
