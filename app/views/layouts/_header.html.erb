@@ -3,8 +3,13 @@
     <%= link_to "Visual QC", root_path, id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "Home", root_path %></li>
-        <li><%= link_to "Log in", '#' %></li>
+        <li><%= link_to "Scans", root_path %></li>
+
+        <% if logged_in? %>
+          <li><%= link_to current_user.name, current_user %></li>
+        <% else %>
+          <li><%= link_to "Log in", users_path %></li>
+        <% end %>
       </ul>
     </nav>
   </div>
