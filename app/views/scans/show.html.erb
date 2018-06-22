@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Subject:</strong>
   <%= @scan.subject %>
@@ -8,6 +6,11 @@
 <p>
   <strong>Session:</strong>
   <%= @scan.session %>
+</p>
+
+<p>
+  <strong>Thumbnail:</strong>
+  <%= image_tag("http://www.rollthepotato.net/~john/.thumbnails/sub-#{@scan.subject}_ses-#{@scan.session}.png") %>
 </p>
 
 <%= link_to 'Edit', edit_scan_path(@scan) %> |
