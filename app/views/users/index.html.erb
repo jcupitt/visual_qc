@@ -1,28 +1,33 @@
+<% provide(:title, "Users") %>
+
 <h1>Users</h1>
 
-<p>
-  Click on a username to log in as that person.
-</p>
+<div class="center jumbotron">
+  <p>
+    Click on a username to log in as that person.
+  </p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @users.each do |user| %>
+  <table>
+    <thead>
       <tr>
-        <td><%= link_to user.name, login_path(user) %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Name</th>
+        <th colspan="2"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<br>
+    <tbody>
 
-<%= link_to 'New User', new_user_path %>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user.name, login_path(user) %></td>
+          <td><%= link_to 'Edit', edit_user_path(user), class: "btn-sm" %></td>
+          <td><%= link_to 'Destroy', user, method: :delete, 
+                    data: { confirm: 'Are you sure?' }, class: "btn-sm" %></td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+
+  <%= link_to 'New User', new_user_path, class: "btn btn-primary" %>
+</div>

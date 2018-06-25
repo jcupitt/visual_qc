@@ -1,17 +1,12 @@
-<p>
-  <strong>Subject:</strong>
-  <%= @scan.subject %>
-</p>
+<% provide(:title, "sub-#{@scan.subject}_ses-#{@scan.session}") %>
 
-<p>
-  <strong>Session:</strong>
-  <%= @scan.session %>
-</p>
+<h1>Scan sub-<%= @scan.subject%>_ses-<%= @scan.session%></h1>
 
-<p>
-  <strong>Thumbnail:</strong>
-  <%= image_tag("http://www.rollthepotato.net/~john/.thumbnails/sub-#{@scan.subject}_ses-#{@scan.session}.png") %>
-</p>
+<div class="center jumbotron">
+  <p>
+    <%= image_tag("http://www.rollthepotato.net/~john/.thumbnails/sub-#{@scan.subject}_ses-#{@scan.session}.png") %>
+  </p>
 
-<%= link_to 'Edit', edit_scan_path(@scan) %> |
-<%= link_to 'Back', scans_path %>
+  <%= link_to image_tag("thumb-up-64.png"), new_vote_path(@scan, 1), class: "btn" %> |
+  <%= link_to image_tag("thumb-down-64.png"), new_vote_path(@scan, -1), class: "btn" %> 
+</div>

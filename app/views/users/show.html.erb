@@ -1,7 +1,13 @@
-<p>
-  <strong>Name:</strong>
-  <%= @user.name %>
-</p>
+<% provide(:title, @user.name) %>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to "Log out", logout_path, method: :delete %>
+<h1><%= @user.name %></h1>
+
+<div class="center jumbotron">
+  <p>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </p>
+
+  <%= link_to 'Edit', edit_user_path(@user), class: "btn" %> |
+  <%= link_to "Log out", logout_path, method: :delete, class: "btn" %>
+</div>

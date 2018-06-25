@@ -1,6 +1,28 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+@mixin box_sizing {
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
+
+/*!
+ * IE10 viewport hack for Surface/desktop Windows 8 bug
+ * Copyright 2014-2015 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+/*
+ * See the Getting Started docs for more information:
+ * http://getbootstrap.com/getting-started/#support-ie10-width
+ */
+@-ms-viewport     { width: device-width; }
+@-o-viewport      { width: device-width; }
+@viewport         { width: device-width; }
+
+
+
 /* universal */
 
 body {
@@ -23,6 +45,18 @@ textarea {
   }
 }
 
+/* otherwise a:visited turns the text in the button black */
+
+.btn, .btn:visited {
+    color: #fff;
+    background-color: #0495c9;
+    border-color: #357ebd; 
+}
+.btn:hover, .btn:focus, .btn:active, .btn.active, .open>.dropdown-toggle.btn {
+    color: #fff;
+    background-color: #00b3db;
+    border-color: #285e8e; 
+}
 
 /* typography */
 
@@ -70,3 +104,28 @@ p {
   }
 }
 
+/* footer */
+
+
+/* miscellaneous */
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+/* forms */
+
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+  @include box_sizing;
+}
+
+input {
+  height: auto !important;
+}

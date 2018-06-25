@@ -4,7 +4,8 @@ class ScansController < ApplicationController
   # GET /scans
   # GET /scans.json
   def index
-    @scans = Scan.all
+    @users = User.all
+    @scans = Scan.paginate(page: params[:page])
   end
 
   # GET /scans/1

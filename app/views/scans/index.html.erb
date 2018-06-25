@@ -3,31 +3,29 @@
 <h1>Scans</h1>
 
 <div class="center jumbotron">
+  <%= will_paginate %>
 
   <table>
     <thead>
       <tr>
-        <th>Subject</th>
-        <th>Session</th>
-        <th colspan="3"></th>
+        <th>Scan</th>
+        <% @users.each do |user| %>
+          <th> <%= user.name %> </th>
+        <% end %>
       </tr>
     </thead>
 
     <tbody>
+
       <% @scans.each do |scan| %>
         <tr>
-          <td><%= scan.subject %></td>
-          <td><%= scan.session %></td>
-          <td><%= link_to 'Show', scan %></td>
-          <td><%= link_to 'Edit', edit_scan_path(scan) %></td>
-          <td><%= link_to 'Destroy', scan, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn" %></td>
+          <td><%= link_to "sub-#{scan.subject}_ses-#{scan.session}", 
+                  scan %></td>
         </tr>
       <% end %>
+
     </tbody>
   </table>
 
-  <br>
-
-  <%= link_to 'New Scan', new_scan_path, class: "btn btn-primary" %>
-
+  <%= will_paginate %>
 </div>
