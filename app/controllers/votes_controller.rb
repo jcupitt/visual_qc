@@ -14,7 +14,27 @@ class VotesController < ApplicationController
 
   # GET /votes/new
   def new
-    @vote = Vote.new
+    p = vote_params
+
+    byebug
+
+    vote = Vote.find_by user_id: p[:user_id], scan_id: p[:scan_id]
+    if vote
+      vote.update(p)
+    else
+      vote = Vote.new(p)
+      vote.save
+    end
+
+    scan = Scan.find(vote.scan_id)
+    new_scan = scan.next
+
+    if new_scan
+      redirect_to new_scan 
+    else
+      redirect_to scans_path
+    end
+
   end
 
   # GET /votes/1/edit
@@ -24,41 +44,16 @@ class VotesController < ApplicationController
   # POST /votes
   # POST /votes.json
   def create
-    @vote = Vote.new(vote_params)
-
-    respond_to do |format|
-      if @vote.save
-        format.html { redirect_to @vote, notice: 'Vote was successfully created.' }
-        format.json { render :show, status: :created, location: @vote }
-      else
-        format.html { render :new }
-        format.json { render json: @vote.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /votes/1
   # PATCH/PUT /votes/1.json
   def update
-    respond_to do |format|
-      if @vote.update(vote_params)
-        format.html { redirect_to @vote, notice: 'Vote was successfully updated.' }
-        format.json { render :show, status: :ok, location: @vote }
-      else
-        format.html { render :edit }
-        format.json { render json: @vote.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # DELETE /votes/1
   # DELETE /votes/1.json
   def destroy
-    @vote.destroy
-    respond_to do |format|
-      format.html { redirect_to votes_url, notice: 'Vote was successfully destroyed.' }
-      format.json { head :no_content }
-    end
   end
 
   private
@@ -69,6 +64,6 @@ class VotesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def vote_params
-      params.require(:vote).permit(:vote, :user_id, :scan_id)
+      params.permit(:vote_value, :user_id, :scan_id)
     end
 end

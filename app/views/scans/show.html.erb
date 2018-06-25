@@ -7,6 +7,12 @@
     <%= image_tag("http://www.rollthepotato.net/~john/.thumbnails/sub-#{@scan.subject}_ses-#{@scan.session}.png") %>
   </p>
 
-  <%= link_to image_tag("thumb-up-64.png"), new_vote_path(@scan, 1), class: "btn" %> |
-  <%= link_to image_tag("thumb-down-64.png"), new_vote_path(@scan, -1), class: "btn" %> 
+  <% if logged_in? %>
+    <%= link_to image_tag("thumb-up-64.png"), 
+      new_vote_path(vote_value: +1, scan_id: @scan.id, user_id: current_user.id), 
+      class: "btn" %> |
+    <%= link_to image_tag("thumb-down-64.png"), 
+      new_vote_path(vote_value: -1, scan_id: @scan.id, user_id: current_user.id), 
+      class: "btn" %> 
+  <% end %>
 </div>

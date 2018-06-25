@@ -13,7 +13,7 @@
   <tbody>
     <% @votes.each do |vote| %>
       <tr>
-        <td><%= vote.vote %></td>
+        <td><%= vote.vote_value %></td>
         <td><%= vote.user_id %></td>
         <td><%= vote.scan_id %></td>
         <td><%= link_to 'Show', vote %></td>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180618154340) do
+ActiveRecord::Schema.define(version: 20180625164517) do
 
   create_table "scans", force: :cascade do |t|
     t.text "subject"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180618154340) do
   end
 
   create_table "votes", force: :cascade do |t|
-    t.integer "vote"
+    t.integer "vote_value"
     t.integer "user_id"
     t.integer "scan_id"
     t.datetime "created_at", null: false
