@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 
 ruby '2.5.1'
 
+# need to bump this one higher than rails 5.1.6 askes for to fix a critical
+# vuln
+gem 'sprockets',               '3.7.2'
 
 gem 'rails',                   '5.1.6'
 gem 'will_paginate',           '3.1.6'

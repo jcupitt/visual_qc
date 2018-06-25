@@ -20,6 +20,8 @@ https://whispering-mesa-93684.herokuapp.com
 
   $ heroku run rails db:migrate
 
+  $ heroku run rails db:seed
+
 
 
 
