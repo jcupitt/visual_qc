@@ -16,8 +16,6 @@ class VotesController < ApplicationController
   def new
     p = vote_params
 
-    byebug
-
     vote = Vote.find_by user_id: p[:user_id], scan_id: p[:scan_id]
     if vote
       vote.update(p)

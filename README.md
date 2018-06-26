@@ -18,6 +18,8 @@ https://whispering-mesa-93684.herokuapp.com
 
   $ git push heroku master
 
+  $ heroku pg:reset 
+
   $ heroku run rails db:migrate
 
   $ heroku run rails db:seed

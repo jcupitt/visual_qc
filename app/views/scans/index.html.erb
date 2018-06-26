@@ -5,22 +5,48 @@
 <div class="center jumbotron">
   <%= will_paginate %>
 
-  <table>
+  <table class="table">
     <thead>
       <tr>
-        <th>Scan</th>
+        <th scope="col">Scan</th>
         <% @users.each do |user| %>
-          <th> <%= user.name %> </th>
+          <th scope="col"> <%= user.name %> </th>
         <% end %>
+        <th scope="col">Total</th>
+        <th scope="col">Minimum</th>
       </tr>
     </thead>
 
     <tbody>
 
       <% @scans.each do |scan| %>
+        <% total = 0 %>
+        <% min = 0 %>
+        <% votes = Vote.where(scan_id: scan.id) %>
         <tr>
-          <td><%= link_to "sub-#{scan.subject}_ses-#{scan.session}", 
-                  scan %></td>
+          <th scope="row">
+            <%= link_to "sub-#{scan.subject}_ses-#{scan.session}", scan %>
+          </th>
+          <% @users.each do |user| %>
+            <td>
+              <%= vote = votes.find_by(user_id: user.id)
+                  if vote
+                    total += vote.vote_value 
+
+                    if vote.vote_value < min
+                      min = vote.vote_value
+                    end
+
+                    if vote.vote_value > 0
+                      "+1"
+                    else
+                      "-1"
+                    end
+                  end %>
+            </td>
+          <% end %>
+          <td><%= total %></td>
+          <td><%= min %></td>
         </tr>
       <% end %>
 

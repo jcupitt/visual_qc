@@ -8,11 +8,15 @@
   </p>
 
   <% if logged_in? %>
-    <%= link_to image_tag("thumb-up-64.png"), 
-      new_vote_path(vote_value: +1, scan_id: @scan.id, user_id: current_user.id), 
-      class: "btn" %> |
-    <%= link_to image_tag("thumb-down-64.png"), 
-      new_vote_path(vote_value: -1, scan_id: @scan.id, user_id: current_user.id), 
-      class: "btn" %> 
+    <div class="vote-bar">
+      <%= link_to image_tag("thumb-down-64.png"), 
+            new_vote_path(vote_value: -1, 
+                          scan_id: @scan.id, user_id: current_user.id), 
+            class: "btn", id: "vote-left" %> 
+      <%= link_to image_tag("thumb-up-64.png"), 
+            new_vote_path(vote_value: +1, 
+                          scan_id: @scan.id, user_id: current_user.id), 
+            class: "btn", id: "vote-right" %> 
+    </div>
   <% end %>
 </div>

@@ -1,5 +1,5 @@
 class Scan < ApplicationRecord
-  has_many :votes
+  has_many :votes, dependent: :destroy
 
   def next
     self.class.where("id > ?", id).first
