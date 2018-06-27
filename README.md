@@ -6,24 +6,22 @@ https://whispering-mesa-93684.herokuapp.com
 
 ## Local dev
 
-  $ bundle install --without production
-
-  $ rails db:migrate
-
-  $ rails server
+    $ bundle install --without production
+    $ rails db:migrate
+    $ rails server
 
 ## Deploy
 
-  $ heroku login
+    $ heroku login
+    $ git push heroku master
+    $ heroku pg:reset 
+    $ heroku run rails db:migrate
+    $ heroku run rails db:seed
 
-  $ git push heroku master
+## Generate preview images
 
-  $ heroku pg:reset 
-
-  $ heroku run rails db:migrate
-
-  $ heroku run rails db:seed
-
+    $ cd previews
+    $ ./previews.sh ~/vol/dhcp-derived-data/derived_02Jun2018/participants.tsv
 
 
 
