@@ -3,23 +3,40 @@
 <h1>Scan sub-<%= @scan.subject%>_ses-<%= @scan.session%></h1>
 
 <div class="center jumbotron">
-  <% views = %w(
-                pial
-                midthickness-drawem 
-                white 
-                veryinflated-thickness
-                veryinflated-curvature 
-                veryinflated-sulc 
-             ) 
-     base_url = "http://www.rollthepotato.net/~john/.thumbnails"
-     subses = "sub-#{@scan.subject}_ses-#{@scan.session}"
+
+  <% 
+    names = [
+      %w(pial Pial),
+      %w(midthickness-drawem Mid),
+      %w(white White),
+      %w(veryinflated-thickness Thickness),
+      %w(veryinflated-curvature Curvature),
+      %w(veryinflated-sulc Sulc)
+    ]
+    base_url = "http://www.rollthepotato.net/~john/.thumbnails"
+    subses = "sub-#{@scan.subject}_ses-#{@scan.session}"
   %>
 
-  <% views.each do |view| %>
-    <p>
-      <%= image_tag("#{base_url}/#{subses}-#{view}.png") %>
-    </p>
-  <% end %>
+  <p>
+    <ul class="nav nav-tabs">
+      <% names.each.with_index do |name, i| %>
+        <li class="<%= "show active" if i == 0 %>">
+          <a data-toggle="tab" href="#pane-<%= name[1] %>">
+            <%= name[1] %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% names.each.with_index do |name, i| %>
+        <div id="pane-<%= name[1] %>" 
+          class="tab-pane fade <%= "in active" if i == 0 %>">
+          <%= image_tag("#{base_url}/#{subses}-#{name[0]}.png") %>
+        </div>
+      <% end %>
+    </div>
+  </p>
 
   <% if logged_in? %>
     <div class="vote-bar">
