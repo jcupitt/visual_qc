@@ -1,117 +1,25 @@
 #!/bin/bash
 
-# set -x
-# set -e
-
 # we must have workbench 1.3+, so we can't use the one from the pipeline
 workbench=$HOME/GIT/workbench
 wb_command=$workbench/build/CommandLine/wb_command
 
-dollar_zero="$0"
 participants_tsv=
-ignore_errors=no
-log_output=
-err_output=
-quiet=no
-verbose=no
 
-err() {
-  echo "$*" >> "$err_output"
-
-  if [ x"$verbose" = x"yes" ]; then
-    echo "$*" 
-  fi
-
-  if [ x"$ignore_errors" = x"no" ]; then
-    exit 1
-  fi
-}
-
-log() {
-  echo "$*" >> "$log_output"
-
-  if [ x"$verbose" = x"yes" ]; then
-    echo "$*" 
-  fi
-}
-
-info() {
-  if [ x"$quiet" = x"no" ]; then
-    echo "$*" 
-  fi
-}
-
-run() {
-  log "$@"
-  "$@" >> "$log_output" 2>> "$err_output"
-  if ! [ $? -eq 0 ]; then
-    err "failed, see $log_output and $err_output for details"
-  fi
-}
-
-usage() {
-  # dont use info -- we always want to display this
+libpipe_usage() {
   echo "usage: $dollar_zero [OPTIONS] /path/to/participants.tsv"
   echo "generate a set of surface previews in /path/to/reports/thumbnails/X.png"
-  echo ""
-  echo "options:"
-  echo "  -i | --ignore     ignore errors"
-  echo "  -l | --log FILE   log output to FILE"
-  echo "  -e | --err FILE   log errors to FILE"
-  echo "  -q | --quiet      hide info output"
-  echo "  -v | --verbose    show all output"
-  echo "  -h | --help       show this message"
 }
 
-if [ $# -lt 1 ]; then
-  usage
-  exit 0
-fi
+libpipe_arg() {
+  if [ x$participants_tsv != x"" ]; then
+    err "participants set twice"
+  fi
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    -i|--ignore)  
-      ignore_errors=yes
-      ;;
+  participants_tsv=$(realpath $1)
+}
 
-    -l|--log)  
-      shift
-      log_output="$1"
-      ;;
-
-    -e|--err)  
-      shift
-      err_output="$1"
-      ;;
-
-    -q|--quiet)  
-      quiet=yes 
-      ;;
-
-    -v|--verbose)  
-      verbose=yes 
-      ;;
-
-    -h|--help)  
-      usage
-      exit 0 
-      ;;
-
-    -*) 
-      err "unrecognized option $1" 
-      ;;
-
-    *) 
-      if [ x$participants_tsv != x"" ]; then
-        err "participants set twice"
-      fi
-      participants_tsv=$(realpath $1)
-      ;;
-
-  esac
-
-  shift
-done
+. libpipe.sh
 
 data_dir=$(dirname "$participants_tsv")
 derivatives_dir="$data_dir/derivatives"
@@ -119,27 +27,27 @@ reports_dir="$data_dir/reports"
 work_dir="$reports_dir/workdir"
 thumbnails_dir="$reports_dir/thumbnails"
 
-if [ x$log_output = x"" ]; then
+if [ x$set_log = x"no" ]; then
   log_output="$thumbnails_dir/thumbnails.log"
 fi
 
-if [ x$err_output = x"" ]; then
+if [ x$set_err = x"no" ]; then
   err_output="$thumbnails_dir/thumbnails.err"
 fi
 
-log "$dollar_zero - generating surface previews"
-log ""
-log "settings:"
-log "  participants.tsv   $participants_tsv"
-log "  data_dir           $data_dir"
-log "  derivatives dir    $derivatives_dir"
-log "  reports_dir        $reports_dir"
-log "  work_dir           $work_dir"
-log "  log_output         $log_output"
-log "  err_output         $err_output"
-log "  ignore_errors      $ignore_errors"
-log "  quiet              $quiet"
-log ""
+info "$dollar_zero -- generate surface previews"
+info ""
+info "settings:"
+info "  data_dir           $data_dir"
+info "  participants.tsv   $participants_tsv"
+info "  derivatives dir    $derivatives_dir"
+info "  reports_dir        $reports_dir"
+info "  work_dir           $work_dir"
+info "  log_output         $log_output"
+info "  err_output         $err_output"
+info "  ignore_errors      $ignore_errors"
+info "  quiet              $quiet"
+info ""
 
 if ! [ -f "$participants_tsv" ]; then
   err "$participants_tsv not found"
@@ -152,81 +60,59 @@ fi
 run mkdir -p "$reports_dir"
 run mkdir -p "$work_dir"
 run mkdir -p "$thumbnails_dir"
+run mkdir -p tmp
 
-# sanity-check participants.tsv
-
-sane_participants_tsv="$data_dir/sane_participants.tsv"
-echo -e "participant_id\tsession_id\tgender\tbirth_ga" \
-  >"$sane_participants_tsv"
-
-# associative array of participant ids
-declare -A subject_table
-
-while IFS='' read -r line || [[ -n "$line" ]]; do
-  columns=($line)
-  subject=${columns[0]}
-  gender=${columns[1]}
-  age=${columns[2]}
-
-  # header line?
-  if [ x"$subject" = x"participant_id" ]; then
-    continue
-  fi
-
-  if [ x"${subject_table[$subject]}" != x"" ]; then
-    log "$subject duplicated"
-    continue
-  fi
-  subject_table[$subject]=present
-
-  if ! [ -d "$derivatives_dir/sub-$subject" ]; then
-    # log rather than err since we expect participants to contain some errors
-    log "$subject not found $derivatives_dir/sub-$subject"
-    continue
-  fi
-
-  if [ x"$gender" != x"Male" ] && [ x"$gender" != x"Female" ]; then
-    log "$subject bad gender $gender"
-    continue
-  fi
-
-  if ! [[ $age =~ ^[0-9]+\.[0-9]+$ ]]; then
-    log "$subject bad age $age"
-    continue
-  fi
-
-  for session_path in $derivatives_dir/sub-$subject/ses-*; do
-    ses_session=$(basename $session_path)
-    session=${ses_session#ses-}
-
-    if ! [ -d "$derivatives_dir/sub-$subject/ses-$session" ]; then
-      log "$subject not found $derivatives_dir/sub-$subject/ses-$session"
-      continue
-    fi
-
-    echo -e "${subject}\t${session}\t${gender}\t${age}" \
-      >>"$sane_participants_tsv"
-
-  done
-
-done < "$participants_tsv"
+# make sane_participants.tsv
+sanity_participants "$derivatives_dir" "$participants_tsv" \
+  "tmp/sane_participants.tsv"
 
 # render scenes
 
 patch_scene() {
-  template_scene="$1"
-  new_scene="$2"
-  subject=$3
-  session=$4
+  local _template_scene="$1"
+  local _new_scene="$2"
+  local _subject=$3
+  local _session=$4
+  local -n _matrix=$5
 
-  cat >"$work_dir/x.sed" <<EOF
-s/@SUB-SUBJECT@/sub-${subject}/g
-s/@SES-SESSION@/ses-${session}/g
-s/@SUBJECT-SESSION@/${subject}-${session}/g
-s/@DERIVATIVES_DIR@/${derivatives_dir//\//\\/}/g
+  # we multiply the 3x3 part of the transform matrix by the default WB view
+  # matrix
+  #      0 -1  0
+  #      0  0  1
+  #     -1  0  0
+  # use 0.9 instead of 1 to zoom out a bit ... otherwise, we can clip the 
+  # edges of the brains
+  cat >tmp/x.sed <<EOF
+s/@SUB-SUBJECT@/sub-${_subject}/g
+s/@SES-SESSION@/ses-${_session}/g
+s/@SUBJECT-SESSION@/${_subject}-${_session}/g
+
+s/@DERIVATIVES_DIR@/${_derivatives_dir//\//\\/}/g
+
+s/@ROT0@/$(awk '{print  1 * $1}' <<< ${_matrix[4]})/g
+s/@ROT1@/$(awk '{print -1 * $1}' <<< ${_matrix[5]})/g
+s/@ROT2@/$(awk '{print  1 * $1}' <<< ${_matrix[6]})/g
+s/@ROT3@/${_matrix[3]}/g
+
+s/@ROT4@/$(awk '{print  1 * $1}' <<< ${_matrix[8]})/g
+s/@ROT5@/$(awk '{print -1 * $1}' <<< ${_matrix[9]})/g
+s/@ROT6@/$(awk '{print  1 * $1}' <<< ${_matrix[10]})/g
+s/@ROT7@/${_matrix[7]}/g
+
+s/@ROT8@/$(awk '{print -1 * $1}' <<< ${_matrix[0]})/g
+s/@ROT9@/$(awk '{print  1 * $1}' <<< ${_matrix[1]})/g
+s/@ROT10@/$(awk '{print -1 * $1}' <<< ${_matrix[2]})/g
+s/@ROT11@/${_matrix[11]}/g
+
+s/@ROT12@/${_matrix[12]}/g
+s/@ROT13@/${_matrix[13]}/g
+s/@ROT14@/${_matrix[14]}/g
+s/@ROT15@/${_matrix[15]}/g
+
+s/@SCALE@/0.9/g
 EOF
 
-  sed -f "$work_dir/x.sed" "$template_scene" >"$new_scene"
+  sed -f tmp/x.sed "$_template_scene" >"$_new_scene"
 }
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -243,6 +129,18 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 
   info "processing $subject ..."
 
+  # the corresponding DoF
+  dof=$(ls dofs/sub-${subject}_ses-${session}_age-*.dof)
+  if ! [ -f "$dof" ]; then 
+    err "$dof not found"
+    continue
+  fi
+
+  # aladin format is a simple 4x4 text matrix
+  run mirtk convert-dof "$dof" tmp/x -output-format aladin
+  run ./extract_rotation_from_affine.py --affine tmp/x --outname tmp/y
+  matrix=($(cat tmp/y))
+
   for template in templates/*; do
     template_name=$(basename "$template")
     template_name=${template_name%.template}
@@ -253,11 +151,12 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     scene_path="$thumbnails_dir/$scene_file"
 
     if ! [ -f $png_path ]; then 
-      patch_scene "$template" "$scene_path" $subject $session
+      patch_scene "$template" "$scene_path" $subject $session matrix
 
       run "$wb_command" -logging SEVERE -show-scene \
         "$scene_path" 1 "$png_path" 640 480
     fi
   done
-done < "$sane_participants_tsv"
+
+done < "tmp/sane_participants.tsv"
 

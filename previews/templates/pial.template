@@ -8627,7 +8627,7 @@ Window 1:
                            <Element Index="1">0</Element>
                            <Element Index="2">0</Element>
                         </ObjectArray>
-                        <Object Type="float" Name="m_scaling">1</Object>
+                        <Object Type="float" Name="m_scaling">@SCALE@</Object>
                         <ObjectArray Type="float"
                                      Name="m_rightCortexFlatMapOffset"
                                      Length="2">
@@ -8638,22 +8638,22 @@ Window 1:
                         <ObjectArray Type="float"
                                      Name="m_rotationMatrix"
                                      Length="16">
-                           <Element Index="0">1.91069e-15</Element>
-                           <Element Index="1">-1</Element>
-                           <Element Index="2">-4.37114e-8</Element>
-                           <Element Index="3">0</Element>
-                           <Element Index="4">-4.37114e-8</Element>
-                           <Element Index="5">-4.37114e-8</Element>
-                           <Element Index="6">1</Element>
-                           <Element Index="7">0</Element>
-                           <Element Index="8">-1</Element>
-                           <Element Index="9">0</Element>
-                           <Element Index="10">-4.37114e-8</Element>
-                           <Element Index="11">0</Element>
-                           <Element Index="12">0</Element>
-                           <Element Index="13">0</Element>
-                           <Element Index="14">0</Element>
-                           <Element Index="15">1</Element>
+                           <Element Index="0">@ROT0@</Element>
+                           <Element Index="1">@ROT1@</Element>
+                           <Element Index="2">@ROT2@</Element>
+                           <Element Index="3">@ROT3@</Element>
+                           <Element Index="4">@ROT4@</Element>
+                           <Element Index="5">@ROT5@</Element>
+                           <Element Index="6">@ROT6@</Element>
+                           <Element Index="7">@ROT7@</Element>
+                           <Element Index="8">@ROT8@</Element>
+                           <Element Index="9">@ROT9@</Element>
+                           <Element Index="10">@ROT10@</Element>
+                           <Element Index="11">@ROT11@</Element>
+                           <Element Index="12">@ROT12@</Element>
+                           <Element Index="13">@ROT13@</Element>
+                           <Element Index="14">@ROT14@</Element>
+                           <Element Index="15">@ROT15@</Element>
                         </ObjectArray>
                      </Object>
                      <Object Type="class"
