@@ -13,6 +13,7 @@ https://whispering-mesa-93684.herokuapp.com
 ## Deploy
 
     $ heroku login
+    $ heroku git:remote -a whispering-mesa-93684
     $ git push heroku master
     $ heroku pg:reset 
     $ heroku run rails db:migrate
