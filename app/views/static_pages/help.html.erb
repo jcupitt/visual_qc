@@ -1,0 +1,46 @@
+<% provide(:title, "Help") %>
+
+<h1>Visual QC help</h1>
+
+<div class="jumbotron help">
+
+  <p>This microsite is for visual QC of the output of the
+  <a href="https://github.com/biomedia/dhcp-structural-pipeline">dHCP
+  structural pipeline</a>. Users can flag scans as being "good" or "bad",
+  and the site collects and display everyone's scores. The aim is to make
+  it easy to do a quick visual once-over of the results.</p>
+
+  <h2>How to use the site</h2>
+
+  <p>Click "Log in" at the top right and either pick your username, or click
+  "New user" to make a new one. Please pick a short name, like "JohnC",
+  it'll make display of the tables neater. The site sets a cookie in your
+  browser, so you should only need to log in once and it'll remember. Click
+  on your name again in the title bar to log out.</p>
+
+  <p>This site has pretty much no security: we are a small group 
+  and hopefully passwords are not necessary.</p>
+
+  <p>You'll then be taken to the "Scans" page, listing all the scans in the 
+  database. Click on the first, and you'll see a set of images of the pial 
+  surface of that scan, some tabs to change the displayed surface, and 
+  thumbs up / thumbs down buttons. </p>
+
+  <p>Have a quick look through the surfaces, make a judgement about surface
+  quality, and click up or down. Your vote will be recorded and the next
+  scan will be displayed.</p>
+
+  <h2>How to tell a good result from a bad one</h2>
+
+  <p>Pipeline failures usually show as areas of flat or distorted
+  surfaces. For example, white extraction in sub-CC00605XX11_ses-172700
+  failed, producing this unusually smooth area in the centre: </p>
+
+  <p><img src="https://www.doc.ic.ac.uk/~jcupitt/dhcp-previews/sub-CC00605XX11_ses-172700-white.png" alt="Sub cc00605xx11 ses 172700 white" /></p>
+
+  <p>And then a huge hole in the thickness map where the surface has been
+  completely flattened:</p>
+
+  <p><img src="https://www.doc.ic.ac.uk/~jcupitt/dhcp-previews/sub-CC00605XX11_ses-172700-veryinflated-thickness.png" alt="Sub cc00605xx11 ses 172700 veryinflated thickness" /></p>
+
+</div>

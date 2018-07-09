@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'static_pages/help'
+
   resources :votes
   resources :scans
   resources :users
