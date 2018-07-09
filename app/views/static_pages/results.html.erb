@@ -1,0 +1,44 @@
+<% provide(:title, "Results") %>
+
+<h1>Results</h1>
+
+<div class="jumbotron">
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Scan</th>
+        <% @users.each do |user| %>
+          <th scope="col"> <%= user.name %> </th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @scans.each do |scan| %>
+        <% votes = Vote.where(scan_id: scan.id) %>
+        <tr>
+          <th scope="row">
+            <%= "sub-#{scan.subject}_ses-#{scan.session}" %>
+          </th>
+          <% @users.each do |user| %>
+            <td>
+              <%= vote = votes.find_by(user_id: user.id)
+                  if vote
+                    if vote.vote_value > 0
+                      "+1"
+                    else
+                      "-1"
+                    end
+                  end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+
+</div>
+
