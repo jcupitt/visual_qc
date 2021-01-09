@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.5.1'
+ruby '2.7'
 
 # need to bump this one higher than rails 5.1.6 askes for to fix a critical
 # vuln
@@ -20,12 +20,12 @@ gem 'jbuilder',                '2.7.0'
 
 group :development, :test do
   gem 'sqlite3',               '1.3.13'
+  gem 'listen',                '3.1.5'
   gem 'byebug',                '9.0.6', platform: :mri
 end
 
 group :development do
   gem 'web-console',           '3.5.1'
-  gem 'listen',                '3.1.5'
   gem 'spring',                '2.0.2'
   gem 'spring-watcher-listen', '2.0.1'
 end
