@@ -14,8 +14,10 @@ https://docs.google.com/spreadsheets/d/1m3Ypl8H5WkW9C8-tOgB9xmhX2L77yA6wZ7jPdbEE
 ## Local dev
 
     $ bundle install 
-    $ rails db:migrate
-    $ rails server
+    $ bundle exec rails db:migrate
+    $ bundle exec rake db:seed
+    $ bundle exec rails server
+    $ firefox localhost:3000
 
 ## Deploy
 

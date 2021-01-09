@@ -16,6 +16,14 @@ It renders all templates in `templates/` for all scans, rotating each scan
 into atlas space by pasting the roll, pitch and yaw into the scene files.
 Rotation is calculated with `extract_rotation_from_affine.py`.
 
+# Upload
+
+Make `public_html/dhcp-previews` on an IC machine, then:
+
+```
+scp reports/thumbnails/* yishui.doc.ic.ac.uk:public_html/dhcp-previews
+```
+
 # Making a template
 
 Load one of the spec files into Workbench, perhaps:

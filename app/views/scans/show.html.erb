@@ -14,7 +14,7 @@
       %w(veryinflated-sulc Sulc)
     ]
     base_url = "https://www.doc.ic.ac.uk/~jcupitt/dhcp-previews"
-    subses = "sub-#{@scan.subject}_ses-#{@scan.session}"
+    scan = "#{@scan.subject}-#{@scan.session}"
   %>
 
   <p>
@@ -32,7 +32,7 @@
       <% names.each.with_index do |name, i| %>
         <div id="pane-<%= name[1] %>" 
           class="tab-pane fade <%= "in active" if i == 0 %>">
-          <%= image_tag("#{base_url}/#{subses}-#{name[0]}.png") %>
+          <%= image_tag("#{base_url}/#{scan}-#{name[0]}.jpg") %>
         </div>
       <% end %>
     </div>
