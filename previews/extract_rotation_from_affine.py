@@ -36,8 +36,10 @@ R = np.dot(U, V)
 # print('determinant', np.linalg.det(R))
 
 # create new 4x4 affine from rotation matrix
+# we need to invert R to get the transform to rotate by to get the brain
+# upright again
 new_affine = np.zeros((4, 4))
-new_affine[:3, :3] = R
+new_affine[:3, :3] = np.linalg.inv(R)
 new_affine[3,3] = 1
 
 # print(new_affine)

@@ -7,39 +7,38 @@ wb_command=$workbench/build/CommandLine/wb_command
 participants_tsv=
 
 libpipe_usage() {
-  echo "usage: $dollar_zero [OPTIONS] /path/to/participants.tsv"
-  echo "generate a set of surface previews in /path/to/reports/thumbnails/X.png"
+  echo "usage: $dollar_zero [OPTIONS] /path/to/pipeline/output"
+  echo "generate a set of surface previews in /path/to/reports/thumbnails/X.jpg"
+  echo "eg. $dollar_zero /vol/dhcp-derived-data/derived_aug20_recon07_combined"
 }
 
 libpipe_arg() {
-  if [ x$participants_tsv != x"" ]; then
-    err "participants set twice"
+  if [ x$data_dir != x"" ]; then
+    err "data_dir set twice"
   fi
 
-  participants_tsv=$(realpath $1)
+  data_dir=$(realpath $1)
 }
 
 . libpipe.sh
 
-data_dir=$(dirname "$participants_tsv")
 derivatives_dir="$data_dir/derivatives"
-reports_dir="$data_dir/reports"
-work_dir="$reports_dir/workdir"
+reports_dir="reports"
+work_dir="$data_dir/workdir"
 thumbnails_dir="$reports_dir/thumbnails"
 
 if [ x$set_log = x"no" ]; then
-  log_output="$thumbnails_dir/thumbnails.log"
+  log_output="$reports_dir/thumbnails.log"
 fi
 
 if [ x$set_err = x"no" ]; then
-  err_output="$thumbnails_dir/thumbnails.err"
+  err_output="$reports_dir/thumbnails.err"
 fi
 
 info "$dollar_zero -- generate surface previews"
 info ""
 info "settings:"
 info "  data_dir           $data_dir"
-info "  participants.tsv   $participants_tsv"
 info "  derivatives dir    $derivatives_dir"
 info "  reports_dir        $reports_dir"
 info "  work_dir           $work_dir"
@@ -49,22 +48,14 @@ info "  ignore_errors      $ignore_errors"
 info "  quiet              $quiet"
 info ""
 
-if ! [ -f "$participants_tsv" ]; then
-  err "$participants_tsv not found"
-fi
-
 if ! [ -d "$derivatives_dir" ]; then
   err "$derivatives_dir not found"
 fi
 
-run mkdir -p "$reports_dir"
-run mkdir -p "$work_dir"
-run mkdir -p "$thumbnails_dir"
-run mkdir -p tmp
-
-# make sane_participants.tsv
-sanity_participants "$derivatives_dir" "$participants_tsv" \
-  "tmp/sane_participants.tsv"
+mkdir -p "$reports_dir"
+mkdir -p "$work_dir"
+mkdir -p "$thumbnails_dir"
+mkdir -p tmp
 
 # render scenes
 
@@ -87,7 +78,7 @@ s/@SUB-SUBJECT@/sub-${_subject}/g
 s/@SES-SESSION@/ses-${_session}/g
 s/@SUBJECT-SESSION@/${_subject}-${_session}/g
 
-s/@DERIVATIVES_DIR@/${_derivatives_dir//\//\\/}/g
+s/@DERIVATIVES_DIR@/${derivatives_dir//\//\\/}/g
 
 s/@ROT0@/$(awk '{print  1 * $1}' <<< ${_matrix[4]})/g
 s/@ROT1@/$(awk '{print -1 * $1}' <<< ${_matrix[5]})/g
@@ -115,48 +106,48 @@ EOF
   sed -f tmp/x.sed "$_template_scene" >"$_new_scene"
 }
 
-while IFS='' read -r line || [[ -n "$line" ]]; do
-  columns=($line)
-  subject=${columns[0]}
-  session=${columns[1]}
-  gender=${columns[2]}
-  age=${columns[3]}
+# loop over struct pipeline output
+n_processed=0
+for subject_dir in $derivatives_dir/sub-*; do
+  for session_dir in $subject_dir/ses-*; do
+    basename=$(basename $subject_dir)
+    subject=${basename#sub-}
+    basename=$(basename $session_dir)
+    session=${basename#ses-}
+    scan=$subject-$session
 
-  # header line?
-  if [ x"$subject" = x"participant_id" ]; then
-    continue
-  fi
+    ((n_processed+=1))
 
-  info "processing $subject ..."
+    info "processing $scan ($n_processed) ..."
 
-  # the corresponding DoF
-  dof=$(ls dofs/sub-${subject}_ses-${session}_age-*.dof)
-  if ! [ -f "$dof" ]; then 
-    err "$dof not found"
-    continue
-  fi
-
-  # aladin format is a simple 4x4 text matrix
-  run mirtk convert-dof "$dof" tmp/x -output-format aladin
-  run ./extract_rotation_from_affine.py --affine tmp/x --outname tmp/y
-  matrix=($(cat tmp/y))
-
-  for template in templates/*; do
-    template_name=$(basename "$template")
-    template_name=${template_name%.template}
-
-    png_file=sub-${subject}_ses-${session}-${template_name}.png
-    scene_file=sub-${subject}_ses-${session}-${template_name}.scene
-    png_path="$thumbnails_dir/$png_file"
-    scene_path="$thumbnails_dir/$scene_file"
-
-    if ! [ -f $png_path ]; then 
-      patch_scene "$template" "$scene_path" $subject $session matrix
-
-      run "$wb_command" -logging SEVERE -show-scene \
-        "$scene_path" 1 "$png_path" 640 480
+    # the corresponding DoF
+    dof=$(echo $work_dir/$scan/dofs/$scan-template-*-r.dof.gz)
+    if ! [ -f "$dof" ]; then 
+      err "$dof not found"
+      continue
     fi
-  done
 
-done < "tmp/sane_participants.tsv"
+    # aladin format is a simple 4x4 text matrix
+    run mirtk convert-dof "$dof" tmp/x -output-format aladin
+    run ./extract_rotation_from_affine.py --affine tmp/x --outname tmp/y
+    matrix=($(cat tmp/y))
+
+    for template in templates/*; do
+      template_name=$(basename "$template")
+      template_name=${template_name%.template}
+
+      jpg_file=$scan-${template_name}.jpg
+      scene_file=$scan-${template_name}.scene
+      jpg_path="$thumbnails_dir/$jpg_file"
+      scene_path="$work_dir/$scene_file"
+
+      if ! [ -f $jpg_path ]; then 
+        patch_scene "$template" "$scene_path" $subject $session matrix
+
+        run "$wb_command" -logging SEVERE -show-scene \
+          "$scene_path" 1 "$jpg_path" 640 480
+      fi
+    done
+  done
+done 
 

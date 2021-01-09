@@ -4,26 +4,12 @@ These scripts will render a set of previews from the pipeline output. They
 need Workbench 1.3 or later, and Workbench must have been built with support
 for `-show-scene`.
 
-# Regenerating the DoFs
-
-Run with eg.:
-
-```
-$ ./find-affine.sh ~/vol/dhcp-derived-data/derived_02Jun2018/participants.tsv 
-```
-
-To make a set of DoFs in `dofs/`. These give an affine transform from each
-scan to atlas space.
-
-You'll need to copy the atlas in from somewhere, they are too big to include
-in the repository.
-
 # Regenerating the previews
 
 Run with eg.:
 
 ```
-$ ./previews.sh ~/vol/dhcp-derived-data/derived_02Jun2018/participants.tsv 
+$ ./previews.sh ~/vol/dhcp-derived-data/derived_aug20_recon07_combined
 ```
 
 It renders all templates in `templates/` for all scans, rotating each scan
