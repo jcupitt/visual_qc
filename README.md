@@ -12,9 +12,7 @@ https://whispering-mesa-93684.herokuapp.com
 ## Data
 
 Database is seeded from `db/participant-info-7jan21.csv`. This file is made
-by downloading the release sheet from the dHCP release spreadsheet:
-
-https://docs.google.com/spreadsheets/d/1m3Ypl8H5WkW9C8-tOgB9xmhX2L77yA6wZ7jPdbEEej0
+by downloading the release sheet from the dHCP release spreadsheet.
 
 ## To-do
 
