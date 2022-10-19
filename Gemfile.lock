@@ -86,11 +86,11 @@ GEM
     minitest (5.14.3)
     multi_json (1.15.0)
     nio4r (2.5.4)
-    nokogiri (1.11.1-x86_64-linux)
+    nokogiri (1.13.9-x86_64-linux)
       racc (~> 1.4)
     pg (1.0.0)
     puma (3.9.1)
-    racc (1.5.2)
+    racc (1.6.0)
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -167,7 +167,6 @@ GEM
     will_paginate (3.1.6)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
